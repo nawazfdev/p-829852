@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Buildings, MapPin, Heart, User } from "lucide-react";
+import { Menu, X, Home, Building, MapPin, Heart, User } from "lucide-react";
 import Button from "./Button";
 
 const Navbar = () => {
@@ -28,7 +28,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/", icon: <Home size={18} /> },
-    { name: "Properties", path: "/properties", icon: <Buildings size={18} /> },
+    { name: "Properties", path: "/properties", icon: <Building size={18} /> },
     { name: "Map", path: "/properties?view=map", icon: <MapPin size={18} /> },
     { name: "Saved", path: "/saved", icon: <Heart size={18} /> },
   ];
