@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import PropertyCard, { PropertyData } from "@/components/PropertyCard";
 import Button from "@/components/Button";
+import AgentProfile from "@/components/AgentProfile";
 
 const Index = () => {
   // Sample featured properties
@@ -12,7 +13,7 @@ const Index = () => {
     {
       id: 1,
       title: "Modern Luxury Villa",
-      address: "123 Palm Avenue, Beverly Hills, CA 90210",
+      address: "123 Palm Avenue, Waterloo, ON N2L 3G1",
       price: 4250000,
       bedrooms: 5,
       bathrooms: 4.5,
@@ -24,7 +25,7 @@ const Index = () => {
     {
       id: 2,
       title: "Downtown Penthouse",
-      address: "1000 Fifth Avenue, New York, NY 10028",
+      address: "1000 University Avenue, Waterloo, ON N2L 3G5",
       price: 3750000,
       bedrooms: 3,
       bathrooms: 3,
@@ -36,7 +37,7 @@ const Index = () => {
     {
       id: 3,
       title: "Waterfront Contemporary",
-      address: "500 Beach Drive, Miami Beach, FL 33139",
+      address: "500 Beach Drive, Waterloo, ON N2L 3G8",
       price: 5950000,
       bedrooms: 4,
       bathrooms: 4,
@@ -52,7 +53,7 @@ const Index = () => {
     {
       id: 4,
       title: "Modern Farmhouse",
-      address: "42 Meadow Lane, Greenwich, CT 06830",
+      address: "42 Meadow Lane, Kitchener, ON N2E 1A1",
       price: 2850000,
       bedrooms: 4,
       bathrooms: 3.5,
@@ -64,7 +65,7 @@ const Index = () => {
     {
       id: 5,
       title: "Hillside Retreat",
-      address: "789 Canyon Road, Los Angeles, CA 90077",
+      address: "789 Canyon Road, Waterloo, ON N2L 5Y7",
       price: 3250000,
       bedrooms: 3,
       bathrooms: 3.5,
@@ -76,7 +77,7 @@ const Index = () => {
     {
       id: 6,
       title: "Urban Loft",
-      address: "550 Market Street, San Francisco, CA 94104",
+      address: "550 Market Street, Waterloo, ON N2J 4K3",
       price: 1750000,
       bedrooms: 2,
       bathrooms: 2,
@@ -94,12 +95,15 @@ const Index = () => {
 
       {/* Hero Section */}
       <Hero />
+      
+      {/* Agent Profile Section */}
+      <AgentProfile />
 
       {/* Featured Listings Section */}
       <section className="section-padding">
         <div className="container max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold">Featured Properties</h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Featured Waterloo Properties</h2>
             <Link to="/properties?filter=featured">
               <Button 
                 variant="outline"
@@ -146,9 +150,9 @@ const Index = () => {
       {/* Call to Action */}
       <section className="section-padding bg-primary text-primary-foreground">
         <div className="container max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Find Your Dream Home Today</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Find Your Dream Home in Waterloo Today</h2>
           <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Start your search now and discover the perfect property that meets all your requirements.
+            Start your search now and discover the perfect property that meets all your requirements with Paul Mann, your trusted Waterloo real estate expert.
           </p>
           <Link to="/properties">
             <Button 
@@ -168,10 +172,10 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <Link to="/" className="font-display text-xl font-semibold text-primary">
-                EstateVue
+                MoveWaterloo
               </Link>
               <p className="text-sm text-muted-foreground mt-1">
-                Finding your perfect home, simplified.
+                Finding your perfect home in Waterloo, simplified.
               </p>
             </div>
             <div className="flex space-x-6">
@@ -190,7 +194,7 @@ const Index = () => {
             </div>
           </div>
           <div className="mt-8 pt-4 border-t text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} EstateVue. All rights reserved.
+            © {new Date().getFullYear()} MoveWaterloo. Paul Mann. All rights reserved.
           </div>
         </div>
       </footer>

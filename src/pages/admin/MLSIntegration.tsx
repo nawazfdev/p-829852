@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -20,7 +20,8 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Building, RefreshCw, Save, ArrowRight } from "lucide-react";
+import { Building, RefreshCw, Save, ArrowRight, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const apiConfigSchema = z.object({
   apiKey: z.string().min(5, { message: "API key is required" }),
@@ -36,6 +37,8 @@ const MLSIntegration = () => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
   const [propertyCount, setPropertyCount] = useState(0);
+  const [testResponse, setTestResponse] = useState<any>(null);
+  const [isTestingApi, setIsTestingApi] = useState(false);
   
   const form = useForm<z.infer<typeof apiConfigSchema>>({
     resolver: zodResolver(apiConfigSchema),
@@ -48,9 +51,31 @@ const MLSIntegration = () => {
     },
   });
 
+  // Check localStorage on component mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem("mlsApiSettings");
+    if (savedSettings) {
+      const parsedSettings = JSON.parse(savedSettings);
+      form.reset(parsedSettings);
+      setIsConfigured(true);
+      
+      // If we have a last synced timestamp, load it
+      const lastSync = localStorage.getItem("mlsLastSynced");
+      if (lastSync) {
+        setLastSynced(lastSync);
+      }
+      
+      // If we have a property count, load it
+      const count = localStorage.getItem("mlsPropertyCount");
+      if (count) {
+        setPropertyCount(parseInt(count, 10));
+      }
+    }
+  }, [form]);
+
   function onSubmit(values: z.infer<typeof apiConfigSchema>) {
-    // In a real implementation, we would store these settings in a database
-    console.log("MLS API Settings:", values);
+    // Store settings in localStorage
+    localStorage.setItem("mlsApiSettings", JSON.stringify(values));
     
     toast({
       title: "API Configuration Saved",
@@ -58,25 +83,139 @@ const MLSIntegration = () => {
     });
     
     setIsConfigured(true);
-    // This is just simulating settings being saved - in reality this would be stored in your database
-    localStorage.setItem("mlsApiSettings", JSON.stringify(values));
   }
 
-  function syncNow() {
+  async function testApiConnection() {
+    setIsTestingApi(true);
+    
+    const apiKey = form.getValues("apiKey");
+    const apiUrl = form.getValues("apiUrl");
+    
+    try {
+      // Make a simple test request to the Repliers API
+      const requestPayload = {
+        mlsNumber: "*",
+        operator: "AND",
+        sortBy: "updatedOnDesc",
+        status: "A",
+        limit: 1 // Just get one listing to test
+      };
+      
+      const options = {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+          'REPLIERS-API-KEY': apiKey
+        },
+        body: JSON.stringify(requestPayload)
+      };
+      
+      const response = await fetch(apiUrl, options);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setTestResponse(data);
+      
+      toast({
+        title: "API Connection Successful",
+        description: "Successfully connected to the Repliers API.",
+      });
+    } catch (error) {
+      console.error("API test error:", error);
+      toast({
+        title: "API Connection Failed",
+        description: error instanceof Error ? error.message : "Could not connect to the Repliers API",
+        variant: "destructive"
+      });
+    } finally {
+      setIsTestingApi(false);
+    }
+  }
+
+  async function syncNow() {
     setIsSyncing(true);
     
-    // Simulate API synchronization - this would be replaced with real API calls
-    setTimeout(() => {
-      setIsSyncing(false);
+    const apiKey = form.getValues("apiKey");
+    const apiUrl = form.getValues("apiUrl");
+    const locationFilters = form.getValues("locationFilters");
+    
+    try {
+      // Build the request payload
+      const requestPayload: any = {
+        mlsNumber: "*",
+        operator: "AND",
+        sortBy: "updatedOnDesc",
+        status: "A",
+      };
+      
+      // Add location filters if provided
+      if (locationFilters) {
+        // Parse the location filters
+        const filterParts = locationFilters.split(';').filter(part => part.trim());
+        
+        filterParts.forEach(part => {
+          const [key, values] = part.split(':');
+          if (key && values) {
+            const valuesArray = values.split(',').map(v => v.trim());
+            if (valuesArray.length === 1) {
+              requestPayload[key.trim()] = valuesArray[0];
+            } else if (valuesArray.length > 1) {
+              requestPayload[key.trim()] = valuesArray;
+            }
+          }
+        });
+      }
+      
+      const options = {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'content-type': 'application/json',
+          'REPLIERS-API-KEY': apiKey
+        },
+        body: JSON.stringify(requestPayload)
+      };
+      
+      const response = await fetch(apiUrl, options);
+      
+      if (!response.ok) {
+        throw new Error(`API request failed with status ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Update the sync information
       const now = new Date().toLocaleString();
       setLastSynced(now);
-      setPropertyCount(Math.floor(Math.random() * 200) + 50); // Simulate importing random number of properties
+      localStorage.setItem("mlsLastSynced", now);
+      
+      // Get property count
+      const count = data.listings?.length || 0;
+      setPropertyCount(count);
+      localStorage.setItem("mlsPropertyCount", count.toString());
+      
+      // In a real implementation, you would save these properties to your database
+      // For now, we'll just store the latest sync in localStorage
+      localStorage.setItem("mlsLatestSync", JSON.stringify(data));
       
       toast({
         title: "Synchronization Complete",
-        description: `Successfully imported ${propertyCount} properties from the MLS.`,
+        description: `Successfully imported ${count} properties from the MLS.`,
       });
-    }, 3000);
+    } catch (error) {
+      console.error("Sync error:", error);
+      toast({
+        title: "Synchronization Failed",
+        description: error instanceof Error ? error.message : "Failed to sync properties from MLS",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSyncing(false);
+    }
   }
 
   return (
@@ -84,7 +223,7 @@ const MLSIntegration = () => {
       <div>
         <h1 className="text-3xl font-bold tracking-tight">MLS Integration</h1>
         <p className="text-muted-foreground">
-          Configure your Multiple Listing Service (MLS) API integration to import properties automatically.
+          Configure your Multiple Listing Service (MLS) API integration with Repliers.com to import properties automatically.
         </p>
       </div>
 
@@ -97,7 +236,7 @@ const MLSIntegration = () => {
         <TabsContent value="configuration">
           <Card>
             <CardHeader>
-              <CardTitle>API Settings</CardTitle>
+              <CardTitle>Repliers.com API Settings</CardTitle>
               <CardDescription>
                 Configure your Repliers.com MLS API integration details. 
                 {isConfigured && (
@@ -108,6 +247,15 @@ const MLSIntegration = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <Alert className="mb-6">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Important</AlertTitle>
+                <AlertDescription>
+                  You'll need a valid Repliers.com API key to integrate MLS listings. Your API key will be stored
+                  locally for this demo. In production, it should be stored securely in a database.
+                </AlertDescription>
+              </Alert>
+              
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -118,7 +266,7 @@ const MLSIntegration = () => {
                         <FormItem className="md:col-span-2">
                           <FormLabel>API Key</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your MLS API key" {...field} />
+                            <Input placeholder="Enter your Repliers.com API key" {...field} />
                           </FormControl>
                           <FormDescription>
                             Enter the API key provided by Repliers.com.
@@ -185,7 +333,7 @@ const MLSIntegration = () => {
                           <FormLabel>Location Filters</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="E.g. city:San Francisco,New York;state:CA,NY;zipCode:94107,10001" 
+                              placeholder="E.g. city:Waterloo,Kitchener;province:Ontario;propertyType:house,condo" 
                               className="min-h-[100px]" 
                               {...field} 
                             />
@@ -200,6 +348,21 @@ const MLSIntegration = () => {
                   </div>
                   
                   <div className="flex justify-end gap-4">
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      onClick={testApiConnection}
+                      disabled={isTestingApi || !form.getValues("apiKey")}
+                    >
+                      {isTestingApi ? (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                          Testing...
+                        </>
+                      ) : (
+                        <>Test Connection</>
+                      )}
+                    </Button>
                     <Button type="submit">
                       <Save className="mr-2 h-4 w-4" />
                       Save Configuration
@@ -246,7 +409,7 @@ const MLSIntegration = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-2xl font-bold">
-                        {form.getValues("autoSync") ? "In 24 hours" : "Not scheduled"}
+                        {form.getValues("autoSync") ? `In ${form.getValues("syncInterval")} hours` : "Not scheduled"}
                       </p>
                     </CardContent>
                   </Card>
@@ -257,7 +420,7 @@ const MLSIntegration = () => {
                     <div>
                       <h3 className="font-medium">Manual Synchronization</h3>
                       <p className="text-sm text-muted-foreground">
-                        Trigger an immediate sync with the MLS API
+                        Trigger an immediate sync with the Repliers.com MLS API
                       </p>
                     </div>
                     <Button 
@@ -292,6 +455,16 @@ const MLSIntegration = () => {
                     </Button>
                   </div>
                 </div>
+                
+                {/* Show test response */}
+                {testResponse && (
+                  <div className="mt-6">
+                    <h3 className="text-sm font-medium mb-2">API Test Response:</h3>
+                    <div className="bg-muted p-4 rounded-md overflow-auto max-h-60">
+                      <pre className="text-xs">{JSON.stringify(testResponse, null, 2)}</pre>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

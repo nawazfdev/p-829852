@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Home, Building, MapPin, Heart, User, LayoutDashboard } from "lucide-react";
@@ -47,12 +46,7 @@ const Navbar = () => {
     >
       <div className="container max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between">
-          <Link 
-            to="/" 
-            className="flex items-center font-display text-2xl font-semibold text-primary"
-          >
-            <span className="animate-fade-in">EstateVue</span>
-          </Link>
+          <Logo />
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
@@ -145,6 +139,16 @@ const Navbar = () => {
         </div>
       )}
     </header>
+  );
+};
+
+const Logo = () => {
+  return (
+    <Link to="/" className="flex items-center">
+      <span className="font-display text-xl font-semibold">
+        Move<span className="text-primary">Waterloo</span>
+      </span>
+    </Link>
   );
 };
 

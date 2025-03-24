@@ -17,6 +17,9 @@ import PropertyForm from "./pages/admin/PropertyForm";
 import ProfileSettings from "./pages/admin/ProfileSettings";
 import MLSIntegration from "./pages/admin/MLSIntegration";
 
+// Set the document title
+document.title = "MoveWaterloo | Paul Mann Real Estate";
+
 const queryClient = new QueryClient();
 
 const App = () => (

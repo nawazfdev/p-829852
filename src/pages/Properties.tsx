@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LayoutGrid, LayoutList, MapIcon } from "lucide-react";
@@ -9,8 +8,11 @@ import SearchBar from "@/components/SearchBar";
 import MapView from "@/components/MapView";
 import Button from "@/components/Button";
 import { PropertyData } from "@/components/PropertyCard";
+import { useToast } from "@/hooks/use-toast";
+import { fetchProperties } from "@/services/repliers-api";
 
 const Properties = () => {
+  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [properties, setProperties] = useState<PropertyData[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyData[]>([]);
@@ -18,131 +20,276 @@ const Properties = () => {
   const [gridLayout, setGridLayout] = useState<"grid" | "list">("grid");
   const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({});
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasApiConfig, setHasApiConfig] = useState(false);
 
-  // Sample properties data
+  // Check if we have MLS API configuration on component mount
+  useEffect(() => {
+    const mlsConfig = localStorage.getItem("mlsApiSettings");
+    setHasApiConfig(!!mlsConfig);
+  }, []);
+
+  // Load properties data
   useEffect(() => {
     // In a real app, this would come from an API
-    const propertiesData: PropertyData[] = [
-      {
-        id: 1,
-        title: "Modern Luxury Villa",
-        address: "123 Palm Avenue, Beverly Hills, CA 90210",
-        price: 4250000,
-        bedrooms: 5,
-        bathrooms: 4.5,
-        area: 4200,
-        features: ["Pool", "Smart Home", "View"],
-        imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
-        isFeatured: true
-      },
-      {
-        id: 2,
-        title: "Downtown Penthouse",
-        address: "1000 Fifth Avenue, New York, NY 10028",
-        price: 3750000,
-        bedrooms: 3,
-        bathrooms: 3,
-        area: 3000,
-        features: ["Doorman", "Terrace", "Gym"],
-        imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
-        isFeatured: true
-      },
-      {
-        id: 3,
-        title: "Waterfront Contemporary",
-        address: "500 Beach Drive, Miami Beach, FL 33139",
-        price: 5950000,
-        bedrooms: 4,
-        bathrooms: 4,
-        area: 4800,
-        features: ["Waterfront", "Pool", "Smart Home"],
-        imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop",
-        isFeatured: true
-      },
-      {
-        id: 4,
-        title: "Modern Farmhouse",
-        address: "42 Meadow Lane, Greenwich, CT 06830",
-        price: 2850000,
-        bedrooms: 4,
-        bathrooms: 3.5,
-        area: 3800,
-        features: ["New Construction", "Smart Home", "Energy Efficient"],
-        imageUrl: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop",
-        isNew: true
-      },
-      {
-        id: 5,
-        title: "Hillside Retreat",
-        address: "789 Canyon Road, Los Angeles, CA 90077",
-        price: 3250000,
-        bedrooms: 3,
-        bathrooms: 3.5,
-        area: 3200,
-        features: ["Views", "Pool", "Home Office"],
-        imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop",
-        isNew: true
-      },
-      {
-        id: 6,
-        title: "Urban Loft",
-        address: "550 Market Street, San Francisco, CA 94104",
-        price: 1750000,
-        bedrooms: 2,
-        bathrooms: 2,
-        area: 1800,
-        features: ["Industrial", "High Ceilings", "City Views"],
-        imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop",
-        isNew: true
-      },
-      {
-        id: 7,
-        title: "Historic Brownstone",
-        address: "225 Beacon Street, Boston, MA 02116",
-        price: 4100000,
-        bedrooms: 4,
-        bathrooms: 3.5,
-        area: 4000,
-        features: ["Historic", "Fireplace", "Garden"],
-        imageUrl: "https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?q=80&w=2081&auto=format&fit=crop"
-      },
-      {
-        id: 8,
-        title: "Beachfront Cottage",
-        address: "301 Ocean Drive, Santa Monica, CA 90402",
-        price: 3600000,
-        bedrooms: 3,
-        bathrooms: 2,
-        area: 2200,
-        features: ["Beach Access", "Ocean View", "Renovated"],
-        imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop"
-      },
-      {
-        id: 9,
-        title: "Mountain Retreat",
-        address: "42 Pine Lane, Aspen, CO 81611",
-        price: 6200000,
-        bedrooms: 5,
-        bathrooms: 5.5,
-        area: 5800,
-        features: ["Mountain View", "Ski-in/Ski-out", "Hot Tub"],
-        imageUrl: "https://images.unsplash.com/photo-1609760322879-3f37641966f6?q=80&w=2071&auto=format&fit=crop"
+    const loadProperties = async () => {
+      setIsLoading(true);
+      
+      try {
+        const apiProperties = await fetchProperties();
+        
+        // Fallback to static properties if no API properties
+        if (apiProperties.length === 0) {
+          // Static properties data
+          const staticProperties: PropertyData[] = [
+            {
+              id: 1,
+              title: "Modern Luxury Villa",
+              address: "123 Palm Avenue, Waterloo, ON N2L 3G1",
+              price: 4250000,
+              bedrooms: 5,
+              bathrooms: 4.5,
+              area: 4200,
+              features: ["Pool", "Smart Home", "View"],
+              imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
+              isFeatured: true
+            },
+            {
+              id: 2,
+              title: "Downtown Penthouse",
+              address: "1000 University Avenue, Waterloo, ON N2L 3G5",
+              price: 3750000,
+              bedrooms: 3,
+              bathrooms: 3,
+              area: 3000,
+              features: ["Doorman", "Terrace", "Gym"],
+              imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+              isFeatured: true
+            },
+            {
+              id: 3,
+              title: "Waterfront Contemporary",
+              address: "500 Beach Drive, Waterloo, ON N2L 3G8",
+              price: 5950000,
+              bedrooms: 4,
+              bathrooms: 4,
+              area: 4800,
+              features: ["Waterfront", "Pool", "Smart Home"],
+              imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop",
+              isFeatured: true
+            },
+            {
+              id: 4,
+              title: "Modern Farmhouse",
+              address: "42 Meadow Lane, Kitchener, ON N2E 1A1",
+              price: 2850000,
+              bedrooms: 4,
+              bathrooms: 3.5,
+              area: 3800,
+              features: ["New Construction", "Smart Home", "Energy Efficient"],
+              imageUrl: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop",
+              isNew: true
+            },
+            {
+              id: 5,
+              title: "Hillside Retreat",
+              address: "789 Canyon Road, Waterloo, ON N2L 5Y7",
+              price: 3250000,
+              bedrooms: 3,
+              bathrooms: 3.5,
+              area: 3200,
+              features: ["Views", "Pool", "Home Office"],
+              imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop",
+              isNew: true
+            },
+            {
+              id: 6,
+              title: "Urban Loft",
+              address: "550 Market Street, Waterloo, ON N2J 4K3",
+              price: 1750000,
+              bedrooms: 2,
+              bathrooms: 2,
+              area: 1800,
+              features: ["Industrial", "High Ceilings", "City Views"],
+              imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop",
+              isNew: true
+            },
+            {
+              id: 7,
+              title: "Historic Brownstone",
+              address: "225 Beacon Street, Boston, MA 02116",
+              price: 4100000,
+              bedrooms: 4,
+              bathrooms: 3.5,
+              area: 4000,
+              features: ["Historic", "Fireplace", "Garden"],
+              imageUrl: "https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?q=80&w=2081&auto=format&fit=crop"
+            },
+            {
+              id: 8,
+              title: "Beachfront Cottage",
+              address: "301 Ocean Drive, Santa Monica, CA 90402",
+              price: 3600000,
+              bedrooms: 3,
+              bathrooms: 2,
+              area: 2200,
+              features: ["Beach Access", "Ocean View", "Renovated"],
+              imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop"
+            },
+            {
+              id: 9,
+              title: "Mountain Retreat",
+              address: "42 Pine Lane, Aspen, CO 81611",
+              price: 6200000,
+              bedrooms: 5,
+              bathrooms: 5.5,
+              area: 5800,
+              features: ["Mountain View", "Ski-in/Ski-out", "Hot Tub"],
+              imageUrl: "https://images.unsplash.com/photo-1609760322879-3f37641966f6?q=80&w=2071&auto=format&fit=crop"
+            }
+          ];
+          
+          setProperties(staticProperties);
+        } else {
+          // Add isFeatured and isNew flags to some properties
+          const enhancedProperties = apiProperties.map((p, i) => ({
+            ...p,
+            isFeatured: i < 3,
+            isNew: i >= 3 && i < 6
+          }));
+          
+          setProperties(enhancedProperties);
+          
+          toast({
+            title: "Properties Loaded",
+            description: `Successfully loaded ${enhancedProperties.length} properties from MLS API.`,
+          });
+        }
+      } catch (error) {
+        console.error("Error loading properties:", error);
+        toast({
+          title: "Error Loading Properties",
+          description: "Failed to load properties from API. Showing static data instead.",
+          variant: "destructive"
+        });
+        
+        // Fallback to static data on error
+        const staticProperties: PropertyData[] = [
+          {
+            id: 1,
+            title: "Modern Luxury Villa",
+            address: "123 Palm Avenue, Waterloo, ON N2L 3G1",
+            price: 4250000,
+            bedrooms: 5,
+            bathrooms: 4.5,
+            area: 4200,
+            features: ["Pool", "Smart Home", "View"],
+            imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop",
+            isFeatured: true
+          },
+          {
+            id: 2,
+            title: "Downtown Penthouse",
+            address: "1000 University Avenue, Waterloo, ON N2L 3G5",
+            price: 3750000,
+            bedrooms: 3,
+            bathrooms: 3,
+            area: 3000,
+            features: ["Doorman", "Terrace", "Gym"],
+            imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop",
+            isFeatured: true
+          },
+          {
+            id: 3,
+            title: "Waterfront Contemporary",
+            address: "500 Beach Drive, Waterloo, ON N2L 3G8",
+            price: 5950000,
+            bedrooms: 4,
+            bathrooms: 4,
+            area: 4800,
+            features: ["Waterfront", "Pool", "Smart Home"],
+            imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop",
+            isFeatured: true
+          },
+          {
+            id: 4,
+            title: "Modern Farmhouse",
+            address: "42 Meadow Lane, Kitchener, ON N2E 1A1",
+            price: 2850000,
+            bedrooms: 4,
+            bathrooms: 3.5,
+            area: 3800,
+            features: ["New Construction", "Smart Home", "Energy Efficient"],
+            imageUrl: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=2070&auto=format&fit=crop",
+            isNew: true
+          },
+          {
+            id: 5,
+            title: "Hillside Retreat",
+            address: "789 Canyon Road, Waterloo, ON N2L 5Y7",
+            price: 3250000,
+            bedrooms: 3,
+            bathrooms: 3.5,
+            area: 3200,
+            features: ["Views", "Pool", "Home Office"],
+            imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop",
+            isNew: true
+          },
+          {
+            id: 6,
+            title: "Urban Loft",
+            address: "550 Market Street, Waterloo, ON N2J 4K3",
+            price: 1750000,
+            bedrooms: 2,
+            bathrooms: 2,
+            area: 1800,
+            features: ["Industrial", "High Ceilings", "City Views"],
+            imageUrl: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop",
+            isNew: true
+          },
+          {
+            id: 7,
+            title: "Historic Brownstone",
+            address: "225 Beacon Street, Boston, MA 02116",
+            price: 4100000,
+            bedrooms: 4,
+            bathrooms: 3.5,
+            area: 4000,
+            features: ["Historic", "Fireplace", "Garden"],
+            imageUrl: "https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?q=80&w=2081&auto=format&fit=crop"
+          },
+          {
+            id: 8,
+            title: "Beachfront Cottage",
+            address: "301 Ocean Drive, Santa Monica, CA 90402",
+            price: 3600000,
+            bedrooms: 3,
+            bathrooms: 2,
+            area: 2200,
+            features: ["Beach Access", "Ocean View", "Renovated"],
+            imageUrl: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop"
+          },
+          {
+            id: 9,
+            title: "Mountain Retreat",
+            address: "42 Pine Lane, Aspen, CO 81611",
+            price: 6200000,
+            bedrooms: 5,
+            bathrooms: 5.5,
+            area: 5800,
+            features: ["Mountain View", "Ski-in/Ski-out", "Hot Tub"],
+            imageUrl: "https://images.unsplash.com/photo-1609760322879-3f37641966f6?q=80&w=2071&auto=format&fit=crop"
+          }
+        ];
+        
+        setProperties(staticProperties);
+      } finally {
+        setIsLoading(false);
       }
-    ];
+    };
     
-    setProperties(propertiesData);
-    
-    // Apply initial filters from URL if present
-    const initialFilters: Record<string, string | string[]> = {};
-    const filterParam = searchParams.get("filter");
-    if (filterParam === "featured") {
-      initialFilters.featured = "true";
-    } else if (filterParam === "new") {
-      initialFilters.new = "true";
-    }
-    
-    setActiveFilters(initialFilters);
-  }, [searchParams]);
+    loadProperties();
+  }, [toast]);
 
   // Filter properties when activeFilters change
   useEffect(() => {
@@ -262,9 +409,9 @@ const Properties = () => {
       <div className="pt-24 pb-8 px-4 sm:px-6 lg:px-8 container max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Properties</h1>
+            <h1 className="text-3xl font-bold mb-2">Waterloo Properties</h1>
             <p className="text-muted-foreground">
-              {filteredProperties.length} properties available
+              {isLoading ? "Loading properties..." : `${filteredProperties.length} properties available`}
             </p>
           </div>
           
@@ -377,7 +524,11 @@ const Properties = () => {
           
           {/* Property List or Map */}
           <div className="lg:w-3/4">
-            {isMapView ? (
+            {isLoading ? (
+              <div className="flex justify-center items-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            ) : isMapView ? (
               <div className="bg-card rounded-lg shadow-sm animate-fade-in">
                 <MapView 
                   properties={filteredProperties}

@@ -22,10 +22,10 @@ const Hero = () => {
       <div className="container relative max-w-7xl mx-auto h-full flex flex-col justify-center px-4">
         <div className="max-w-3xl animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-balance">
-            Find Your Perfect Home
+            Move to Waterloo with Confidence
           </h1>
           <p className="text-lg md:text-xl text-foreground/80 mb-8 max-w-2xl">
-            Explore premium properties and find the perfect place to call home. Browse our curated selection of exclusive listings.
+            Find your perfect home in Waterloo with Paul Mann, your trusted real estate expert with over 10 years of experience.
           </p>
 
           <div className="max-w-2xl">

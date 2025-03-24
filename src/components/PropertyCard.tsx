@@ -17,6 +17,8 @@ export interface PropertyData {
   imageUrl: string;
   isFeatured?: boolean;
   isNew?: boolean;
+  mlsNumber?: string;
+  description?: string;
 }
 
 interface PropertyCardProps {
