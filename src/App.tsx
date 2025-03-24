@@ -15,6 +15,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import PropertyList from "./pages/admin/PropertyList";
 import PropertyForm from "./pages/admin/PropertyForm";
 import ProfileSettings from "./pages/admin/ProfileSettings";
+import MLSIntegration from "./pages/admin/MLSIntegration";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="properties/add" element={<PropertyForm />} />
             <Route path="properties/edit/:id" element={<PropertyForm />} />
             <Route path="profile" element={<ProfileSettings />} />
+            <Route path="mls-integration" element={<MLSIntegration />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Filter, X, Check, ChevronDown, ChevronUp, 
@@ -165,7 +164,7 @@ const PropertyFilters = ({
           <Filter size={18} className="mr-2" />
           <h3 className="font-medium">Filters</h3>
           {activeFilterCount > 0 && (
-            <Badge variant="primary" className="ml-2">
+            <Badge variant="secondary" className="ml-2">
               {activeFilterCount}
             </Badge>
           )}

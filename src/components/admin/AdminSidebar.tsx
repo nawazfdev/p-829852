@@ -8,10 +8,10 @@ import {
   User, 
   Settings, 
   Plus, 
-  List, 
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Globe
 } from "lucide-react";
 
 const AdminSidebar = () => {
@@ -30,6 +30,7 @@ const AdminSidebar = () => {
     { name: "Dashboard", path: "/admin", icon: <Home size={20} /> },
     { name: "Properties", path: "/admin/properties", icon: <Building size={20} /> },
     { name: "Add Property", path: "/admin/properties/add", icon: <Plus size={20} /> },
+    { name: "MLS Integration", path: "/admin/mls-integration", icon: <Globe size={20} /> },
     { name: "Profile", path: "/admin/profile", icon: <User size={20} /> },
     { name: "Settings", path: "/admin/settings", icon: <Settings size={20} /> },
   ];
