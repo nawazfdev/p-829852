@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Building, MapPin, Heart, User } from "lucide-react";
+import { Menu, X, Home, Building, MapPin, Heart, User, LayoutDashboard } from "lucide-react";
 import Button from "./Button";
 
 const Navbar = () => {
@@ -73,13 +73,24 @@ const Navbar = () => {
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              size="sm"
-              icon={<User size={16} />}
-            >
-              Sign In
-            </Button>
+            <Link to="/admin">
+              <Button 
+                variant="outline" 
+                size="sm"
+                icon={<LayoutDashboard size={16} />}
+              >
+                Admin
+              </Button>
+            </Link>
+            <Link to="/signin">
+              <Button 
+                variant="outline" 
+                size="sm"
+                icon={<User size={16} />}
+              >
+                Sign In
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -110,14 +121,25 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-2 pb-1">
-              <Button 
-                variant="outline" 
-                className="w-full justify-center mt-2"
-                icon={<User size={18} />}
-              >
-                Sign In
-              </Button>
+            <div className="pt-2 pb-1 space-y-2">
+              <Link to="/admin" className="w-full block">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-center"
+                  icon={<LayoutDashboard size={18} />}
+                >
+                  Admin Dashboard
+                </Button>
+              </Link>
+              <Link to="/signin" className="w-full block">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-center"
+                  icon={<User size={18} />}
+                >
+                  Sign In
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
