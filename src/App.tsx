@@ -16,6 +16,9 @@ import PropertyList from "./pages/admin/PropertyList";
 import PropertyForm from "./pages/admin/PropertyForm";
 import ProfileSettings from "./pages/admin/ProfileSettings";
 import MLSIntegration from "./pages/admin/MLSIntegration";
+import Buyer from "./pages/Buyer";
+import Seller from "./pages/Seller";
+import BookNow from "./pages/BookNow";
 
 // Set the document title
 document.title = "MoveWaterloo | Paul Mann Real Estate";
@@ -34,6 +37,9 @@ const App = () => (
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/buyer" element={<Buyer />} />
+          <Route path="/seller" element={<Seller />} />
+          <Route path="/book-now" element={<BookNow />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />}>

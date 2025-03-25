@@ -6,6 +6,8 @@ import Hero from "@/components/Hero";
 import PropertyCard, { PropertyData } from "@/components/PropertyCard";
 import Button from "@/components/Button";
 import AgentProfile from "@/components/AgentProfile";
+import YouTubeSection from "@/components/YouTubeSection";
+import LocationMap from "@/components/LocationMap";
 
 const Index = () => {
   // Sample featured properties
@@ -123,6 +125,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* YouTube Videos Section */}
+      <YouTubeSection />
+
       {/* New Listings Section */}
       <section className="section-padding bg-secondary/50">
         <div className="container max-w-7xl mx-auto">
@@ -147,6 +152,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Location Map Section */}
+      <LocationMap />
+
       {/* Call to Action */}
       <section className="section-padding bg-primary text-primary-foreground">
         <div className="container max-w-7xl mx-auto text-center">
@@ -154,15 +162,26 @@ const Index = () => {
           <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
             Start your search now and discover the perfect property that meets all your requirements with Paul Mann, your trusted Waterloo real estate expert.
           </p>
-          <Link to="/properties">
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-white text-white hover:bg-white hover:text-primary"
-            >
-              Browse All Properties
-            </Button>
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/properties">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="border-white text-white hover:bg-white hover:text-primary"
+              >
+                Browse All Properties
+              </Button>
+            </Link>
+            <Link to="/book-now">
+              <Button 
+                variant="secondary" 
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90"
+              >
+                Book a Consultation
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -185,11 +204,14 @@ const Index = () => {
               <Link to="/properties" className="text-sm text-muted-foreground hover:text-foreground">
                 Properties
               </Link>
-              <Link to="/about" className="text-sm text-muted-foreground hover:text-foreground">
-                About
+              <Link to="/buyer" className="text-sm text-muted-foreground hover:text-foreground">
+                Buyer
               </Link>
-              <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground">
-                Contact
+              <Link to="/seller" className="text-sm text-muted-foreground hover:text-foreground">
+                Seller
+              </Link>
+              <Link to="/book-now" className="text-sm text-muted-foreground hover:text-foreground">
+                Book Now
               </Link>
             </div>
           </div>
