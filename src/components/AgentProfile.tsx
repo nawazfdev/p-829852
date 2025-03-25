@@ -1,20 +1,13 @@
-
 import React from "react";
 import { Award, Calendar, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 const AgentProfile = () => {
-  return (
-    <section className="py-16 bg-secondary/20">
+  return <section className="py-16 bg-secondary/20">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row gap-8 items-center">
           <div className="md:w-1/3">
             <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" 
-                alt="Paul Mann" 
-                className="rounded-lg shadow-lg w-full aspect-[4/5] object-cover"
-              />
+              <img alt="Paul Mann" className="rounded-lg shadow-lg w-full aspect-[4/5] object-cover" src="/lovable-uploads/4983e353-6f2d-4aa8-a439-80275ee4892c.jpg" />
               <div className="absolute bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-md shadow font-semibold">
                 <Calendar className="inline-block mr-2 h-4 w-4" />
                 10+ Years Experience
@@ -73,8 +66,6 @@ const AgentProfile = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AgentProfile;
