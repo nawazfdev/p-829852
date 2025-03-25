@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import AgentProfile from "@/components/AgentProfile";
 import YouTubeSection from "@/components/YouTubeSection";
 import LocationMap from "@/components/LocationMap";
+import TestimonialSection from "@/components/TestimonialSection";
 
 const Index = () => {
   // Sample featured properties
@@ -124,6 +125,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Testimonial Section */}
+      <TestimonialSection />
 
       {/* YouTube Videos Section */}
       <YouTubeSection />
