@@ -22,6 +22,7 @@ import BookNow from "./pages/BookNow";
 import MortgageCalculator from "./pages/MortgageCalculator";
 import AffordabilityCalculator from "./pages/AffordabilityCalculator";
 import MarketingPlan from "./pages/MarketingPlan";
+import Footer from "./components/Footer";
 
 // Set the document title
 document.title = "MoveWaterloo | Paul Mann Real Estate";
@@ -63,6 +64,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

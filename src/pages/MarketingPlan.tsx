@@ -3,250 +3,237 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import YouTubeSection from "@/components/YouTubeSection";
 
 const MarketingPlan = () => {
   return (
     <>
       <Navbar />
       <PageHeader
-        title="Our Marketing Plan"
-        description="How we market your property to get the best results"
-        imageUrl="https://images.unsplash.com/photo-1563461661026-49631dd5d68e?q=80&w=2069&auto=format&fit=crop"
+        title="Marketing Plan"
+        description="Our comprehensive marketing strategy to sell your property faster and for the best price"
+        backgroundImage="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1770&auto=format&fit=crop"
       />
 
-      <section className="container max-w-7xl mx-auto px-4 py-12">
-        <div className="flex flex-col gap-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold mb-4">Comprehensive Marketing Strategy</h2>
-            <p className="text-lg text-muted-foreground">
-              Our marketing plan is designed to showcase your property to the right buyers and achieve the best possible sale price.
-            </p>
-          </div>
+      <section className="container max-w-7xl mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4">Our Proven Marketing Strategy</h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            We leverage the latest digital marketing techniques combined with traditional methods 
+            to ensure your property gets maximum exposure to qualified buyers.
+          </p>
+        </div>
 
-          <Tabs defaultValue="digital">
-            <TabsList className="grid grid-cols-3 max-w-md mx-auto mb-8">
-              <TabsTrigger value="digital">Digital</TabsTrigger>
-              <TabsTrigger value="traditional">Traditional</TabsTrigger>
-              <TabsTrigger value="network">Network</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="digital">
-              <div className="grid md:grid-cols-3 gap-6">
-                <MarketingCard 
-                  title="Professional Photography" 
-                  description="High-quality, professional photos that showcase your home's best features"
-                  items={[
-                    "Professional HDR photography",
-                    "Drone aerial shots",
-                    "Virtual staging for empty spaces",
-                    "Twilight photography",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Virtual Tours & 3D" 
-                  description="Immersive digital experiences that bring your home to life online"
-                  items={[
-                    "Matterport 3D virtual tours",
-                    "Interactive floor plans",
-                    "Video walk-throughs",
-                    "360° room views",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Online Marketing" 
-                  description="Strategic digital promotion to reach qualified buyers"
-                  items={[
-                    "Featured listings on MLS",
-                    "Social media campaigns",
-                    "Email marketing to buyer database",
-                    "Targeted online advertising",
-                    "Listing syndication across platforms",
-                  ]}
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="traditional">
-              <div className="grid md:grid-cols-3 gap-6">
-                <MarketingCard 
-                  title="Signage & Print" 
-                  description="Traditional marketing that works alongside digital strategies"
-                  items={[
-                    "Premium yard signs",
-                    "Custom property brochures",
-                    "Direct mail campaigns",
-                    "Feature sheets at showings",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Open Houses" 
-                  description="Strategic open houses designed to showcase your property"
-                  items={[
-                    "Broker open houses",
-                    "Public open houses",
-                    "Exclusive previews",
-                    "Catered events for luxury properties",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Local Advertising" 
-                  description="Targeted local marketing to reach community buyers"
-                  items={[
-                    "Local newspaper features",
-                    "Community newsletter inclusion",
-                    "Local business partnerships",
-                    "Neighborhood flyer distribution",
-                  ]}
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="network">
-              <div className="grid md:grid-cols-3 gap-6">
-                <MarketingCard 
-                  title="Agent Network" 
-                  description="Leveraging professional connections to find buyers"
-                  items={[
-                    "Agent-to-agent marketing",
-                    "Cross-brokerage promotion",
-                    "Realtor preview events",
-                    "Referral network activation",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Buyer Database" 
-                  description="Direct marketing to qualified buyers actively looking"
-                  items={[
-                    "Matching with active buyers",
-                    "Previous clients network",
-                    "Qualified lead follow-up",
-                    "Buyer needs assessment",
-                  ]}
-                />
-                <MarketingCard 
-                  title="Professional Network" 
-                  description="Connections with related professionals who know buyers"
-                  items={[
-                    "Mortgage broker referrals",
-                    "Attorney and legal referrals",
-                    "Relocation specialist partnerships",
-                    "Corporate housing connections",
-                  ]}
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          <div className="mt-12">
-            <h3 className="text-2xl font-bold text-center mb-6">See Our Marketing in Action</h3>
-            <YouTubeSection 
-              videoId="kFjETSa9N4A"
-              title="How We Market Your Home"
-              description="Watch this video to see how we implement our marketing strategy for maximum exposure"
-            />
-          </div>
-
-          <div className="bg-muted p-8 rounded-lg mt-12">
-            <div className="text-center max-w-3xl mx-auto">
-              <h3 className="text-2xl font-bold mb-4">Your Home Marketing Timeline</h3>
-              <p className="text-muted-foreground mb-8">
-                Our strategic marketing plan follows a proven timeline to ensure maximum exposure at the right time
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>Professional Photography</CardTitle>
+              <CardDescription>High-quality visuals that sell</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We employ professional photographers to capture stunning HDR photos, 
+                360° virtual tours, and drone footage that showcase your property in its best light.
               </p>
-              
-              <div className="space-y-8">
-                <TimelineItem 
-                  day="Day 1-3"
-                  title="Property Preparation"
-                  description="Professional photography, videography, 3D scanning, and property preparation"
-                />
-                <TimelineItem 
-                  day="Day 4-5"
-                  title="Pre-launch Marketing"
-                  description="Coming soon announcements, agent network notification, buyer database matching"
-                />
-                <TimelineItem 
-                  day="Day 6-7"
-                  title="Official Launch"
-                  description="MLS listing goes live, digital marketing campaigns begin, signage installed"
-                />
-                <TimelineItem 
-                  day="Week 2"
-                  title="Maximum Exposure"
-                  description="Open houses, featured online promotions, social media campaigns"
-                />
-                <TimelineItem 
-                  day="Week 3+"
-                  title="Ongoing Marketing & Feedback"
-                  description="Marketing statistics review, strategy adjustments, regular seller updates"
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="text-center max-w-3xl mx-auto mt-12">
-            <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
-            <p className="text-lg mb-8">
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>High-resolution photographs</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Immersive 3D virtual tours</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Aerial drone photography</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>Digital Marketing</CardTitle>
+              <CardDescription>Targeted online campaigns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We create targeted online marketing campaigns to reach potential buyers 
+                across multiple platforms and drive qualified traffic to your listing.
+              </p>
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Social media advertising</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Email marketing campaigns</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Google Ads for real estate searches</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>MLS & Websites</CardTitle>
+              <CardDescription>Maximum online exposure</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We ensure your property is featured prominently on MLS and the top real estate 
+                websites where serious buyers are searching.
+              </p>
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Featured listing on MLS</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Realtor.ca enhanced listing</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Syndication to top real estate sites</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>Print Marketing</CardTitle>
+              <CardDescription>Traditional methods that work</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We complement our digital efforts with strategic print marketing to 
+                maximize local exposure and reach all potential buyers.
+              </p>
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Professional brochures</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Direct mail campaigns</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Feature sheets and postcards</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>Open Houses</CardTitle>
+              <CardDescription>Strategically planned events</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We organize well-planned open houses that attract serious buyers and 
+                create opportunities for offers.
+              </p>
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Strategic timing for maximum attendance</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Professional hosting and follow-up</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Digital sign-in for lead capture</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-lg border-t-4 border-primary">
+            <CardHeader>
+              <CardTitle>Agent Network</CardTitle>
+              <CardDescription>Professional connections</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p>
+                We leverage our extensive network of real estate professionals to 
+                bring qualified buyers to your property.
+              </p>
+              <ul className="mt-4 space-y-2">
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Agent open houses</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Broker-to-broker marketing</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle2 className="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" />
+                  <span>Referral network promotion</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="bg-muted rounded-lg p-8 flex flex-col md:flex-row items-center justify-between">
+          <div>
+            <h3 className="text-2xl font-bold mb-2">Ready to get started?</h3>
+            <p className="text-muted-foreground">
               Let's create a customized marketing plan for your property.
             </p>
-            <a href="/book-now" className="inline-block bg-primary text-primary-foreground px-8 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors">
-              Book a Consultation
-            </a>
+          </div>
+          <Button size="lg" className="mt-4 md:mt-0">
+            Book a Consultation
+          </Button>
+        </div>
+      </section>
+
+      {/* Video Section */}
+      <section className="bg-gray-100 py-16">
+        <div className="container max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">See Our Marketing in Action</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Watch this short video showcasing how we market properties to achieve exceptional results.
+            </p>
+          </div>
+          
+          <div className="relative aspect-video max-w-4xl mx-auto rounded-lg overflow-hidden shadow-xl">
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+              title="Our Marketing Strategy" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+              className="absolute inset-0"
+            ></iframe>
           </div>
         </div>
       </section>
     </>
-  );
-};
-
-// Marketing card component
-const MarketingCard = ({ title, description, items }: { 
-  title: string;
-  description: string;
-  items: string[];
-}) => {
-  return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul className="space-y-2">
-          {items.map((item, index) => (
-            <li key={index} className="flex items-start gap-2">
-              <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
-  );
-};
-
-// Timeline item component
-const TimelineItem = ({ day, title, description }: {
-  day: string;
-  title: string;
-  description: string;
-}) => {
-  return (
-    <div className="flex gap-4 text-left">
-      <div className="w-24 font-bold text-primary">{day}</div>
-      <div>
-        <h4 className="font-semibold mb-1">{title}</h4>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </div>
-    </div>
   );
 };
 

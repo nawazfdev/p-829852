@@ -11,12 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Trash, Eye, Plus } from "lucide-react";
+import { Edit, Trash, Eye, Plus, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const PropertyList = () => {
   const { toast } = useToast();
 
-  // Dummy data (would come from API in real implementation)
+  // In the future, this would come from Supabase
   const properties = [
     { id: 1, title: "Modern Apartment in Downtown", price: "$350,000", type: "Apartment", bedrooms: 2, status: "Active" },
     { id: 2, title: "Family Home with Garden", price: "$520,000", type: "House", bedrooms: 4, status: "Active" },
@@ -46,6 +47,31 @@ const PropertyList = () => {
             <Plus className="mr-2 h-4 w-4" /> Add Property
           </Button>
         </Link>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="relative w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+          <Input 
+            placeholder="Search properties..." 
+            className="pl-9"
+          />
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            All ({properties.length})
+          </Button>
+          <Button variant="outline" size="sm">
+            Active (3)
+          </Button>
+          <Button variant="outline" size="sm">
+            Pending (1)
+          </Button>
+          <Button variant="outline" size="sm">
+            Draft (1)
+          </Button>
+        </div>
       </div>
 
       <div className="border rounded-md">

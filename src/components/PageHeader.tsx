@@ -11,6 +11,7 @@ interface PageHeaderProps {
   title: string;
   subtitle?: string;
   backgroundImage: string;
+  description?: string;  // Added description prop
   quote?: Quote;
 }
 
@@ -18,6 +19,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title, 
   subtitle, 
   backgroundImage,
+  description,  // Added description in destructuring
   quote 
 }) => {
   return (
@@ -36,6 +38,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       <div className="container relative z-10 text-center text-white">
         <h1 className="text-5xl md:text-7xl font-bold mb-4">{title}</h1>
         {subtitle && <p className="text-xl md:text-2xl max-w-3xl mx-auto text-white/80">{subtitle}</p>}
+        {description && <p className="text-xl max-w-3xl mx-auto text-white/90 mt-4">{description}</p>}
       </div>
 
       {/* Quote */}

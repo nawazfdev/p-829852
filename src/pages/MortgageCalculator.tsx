@@ -79,7 +79,7 @@ const MortgageCalculator = () => {
       <PageHeader
         title="Mortgage Calculator"
         description="Plan your home purchase with our easy-to-use mortgage calculator"
-        imageUrl="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1932&auto=format&fit=crop"
+        backgroundImage="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1932&auto=format&fit=crop"
       />
 
       <section className="container max-w-7xl mx-auto px-4 py-12">
