@@ -19,6 +19,9 @@ import MLSIntegration from "./pages/admin/MLSIntegration";
 import Buyer from "./pages/Buyer";
 import Seller from "./pages/Seller";
 import BookNow from "./pages/BookNow";
+import MortgageCalculator from "./pages/MortgageCalculator";
+import AffordabilityCalculator from "./pages/AffordabilityCalculator";
+import MarketingPlan from "./pages/MarketingPlan";
 
 // Set the document title
 document.title = "MoveWaterloo | Paul Mann Real Estate";
@@ -40,9 +43,9 @@ const App = () => (
           <Route path="/buyer" element={<Buyer />} />
           <Route path="/seller" element={<Seller />} />
           <Route path="/book-now" element={<BookNow />} />
-          <Route path="/mortgage-calculator" element={<NotFound />} />
-          <Route path="/affordability-calculator" element={<NotFound />} />
-          <Route path="/marketing-plan" element={<NotFound />} />
+          <Route path="/mortgage-calculator" element={<MortgageCalculator />} />
+          <Route path="/affordability-calculator" element={<AffordabilityCalculator />} />
+          <Route path="/marketing-plan" element={<MarketingPlan />} />
           
           {/* Property City Routes */}
           <Route path="/property-city/:city" element={<Properties />} />
