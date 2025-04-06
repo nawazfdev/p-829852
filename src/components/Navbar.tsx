@@ -1,8 +1,17 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Home, Building, MapPin, Heart, User, LayoutDashboard, Book, DollarSign, Calendar } from "lucide-react";
+import { Menu, X, Home, Building, MapPin, Heart, User, DollarSign, Book, Calendar, ChevronDown } from "lucide-react";
 import Button from "./Button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,17 +35,26 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const navLinks = [
-    { name: "Home", path: "/", icon: <Home size={18} /> },
-    { name: "Properties", path: "/properties", icon: <Building size={18} /> },
-    { name: "Map", path: "/properties?view=map", icon: <MapPin size={18} /> },
-    { name: "Saved", path: "/saved", icon: <Heart size={18} /> },
+  // Buyer dropdown items
+  const buyerLinks = [
+    { name: "Buyer", path: "/buyer" },
+    { name: "Active Listings", path: "/properties" },
+    { name: "Mortgage Calculator", path: "/mortgage-calculator" },
+    { name: "Affordability Calculator", path: "/affordability-calculator" },
   ];
 
-  const serviceLinks = [
-    { name: "Buyer Guide", path: "/buyer", icon: <Book size={18} /> },
-    { name: "Seller Guide", path: "/seller", icon: <DollarSign size={18} /> },
-    { name: "Book Now", path: "/book-now", icon: <Calendar size={18} /> },
+  // Living in dropdown items
+  const livingInLinks = [
+    { name: "Waterloo", path: "/property-city/waterloo" },
+    { name: "Paris", path: "/property-city/paris" },
+    { name: "Ontario", path: "/property-city/ontario" },
+    { name: "Mississauga", path: "/property-city/mississauga" },
+    { name: "Milton", path: "/property-city/milton" },
+    { name: "Brampton", path: "/property-city/brampton" },
+    { name: "Cambridge", path: "/property-city/cambridge" },
+    { name: "Kitchener", path: "/property-city/kitchener" },
+    { name: "Toronto", path: "/property-city/toronto" },
+    { name: "Woodstock", path: "/property-city/woodstock" },
   ];
 
   const isActive = (path: string) => {
@@ -44,6 +62,96 @@ const Navbar = () => {
     if (path !== "/" && location.pathname.startsWith(path)) return true;
     return false;
   };
+
+  // Navigation menu component for desktop
+  const DesktopNavigationMenu = () => (
+    <NavigationMenu className="hidden md:flex">
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <Link to="/">
+            <NavigationMenuLink className={cn(
+              navigationMenuTriggerStyle(),
+              isActive("/") ? "bg-primary text-primary-foreground" : ""
+            )}>
+              Home
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
+        {/* Buyer Dropdown */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className={isActive("/buyer") || isActive("/properties") || 
+            isActive("/mortgage-calculator") || isActive("/affordability-calculator") 
+            ? "bg-primary text-primary-foreground" : ""}>
+            Buyer <ChevronDown className="h-4 w-4" />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[200px] gap-1 p-2">
+              {buyerLinks.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path} className="block p-2 hover:bg-accent rounded-md">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        {/* Living in Dropdown */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className={isActive("/property-city") ? "bg-primary text-primary-foreground" : ""}>
+            Living in <ChevronDown className="h-4 w-4" />
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[200px] gap-1 p-2 max-h-[400px] overflow-y-auto">
+              {livingInLinks.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path} className="block p-2 hover:bg-accent rounded-md">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+
+        {/* Regular Links */}
+        <NavigationMenuItem>
+          <Link to="/book-now">
+            <NavigationMenuLink className={cn(
+              navigationMenuTriggerStyle(),
+              isActive("/book-now") ? "bg-primary text-primary-foreground" : ""
+            )}>
+              Book a Call
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <Link to="/seller">
+            <NavigationMenuLink className={cn(
+              navigationMenuTriggerStyle(),
+              isActive("/seller") ? "bg-primary text-primary-foreground" : ""
+            )}>
+              Seller
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <Link to="/marketing-plan">
+            <NavigationMenuLink className={cn(
+              navigationMenuTriggerStyle(),
+              isActive("/marketing-plan") ? "bg-primary text-primary-foreground" : ""
+            )}>
+              Marketing-Plan
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
 
   return (
     <header
@@ -55,69 +163,22 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <Logo />
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center ${
-                  isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground/80 hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                <span className="mr-2">{link.icon}</span>
-                {link.name}
-              </Link>
-            ))}
+          {/* Desktop Navigation Menu */}
+          <DesktopNavigationMenu />
 
-            {/* Dropdown for Services */}
-            <div className="relative group">
-              <button 
-                className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center text-foreground/80 hover:text-foreground hover:bg-secondary"
-              >
-                <span className="mr-2"><User size={18} /></span>
-                Services
-              </button>
-              <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                <div className="py-1">
-                  {serviceLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      to={link.path}
-                      className={`block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center ${
-                        isActive(link.path) ? "bg-gray-100" : ""
-                      }`}
-                    >
-                      <span className="mr-2">{link.icon}</span>
-                      {link.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/admin">
-              <Button 
-                variant="outline" 
-                size="sm"
-                icon={<LayoutDashboard size={16} />}
-              >
-                Admin
-              </Button>
-            </Link>
-            <Link to="/signin">
-              <Button 
-                variant="outline" 
-                size="sm"
-                icon={<User size={16} />}
-              >
-                Sign In
-              </Button>
-            </Link>
+          {/* YouTube Button */}
+          <div className="hidden md:block">
+            <a 
+              href="https://www.youtube.com/@waterloorealestate" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+            >
+              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+              </svg>
+              Watch on YouTube
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -134,25 +195,22 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden glass animate-slide-down">
           <div className="px-4 py-4 space-y-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
-                  isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground/80 hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                <span className="mr-3">{link.icon}</span>
-                {link.name}
-              </Link>
-            ))}
+            <Link
+              to="/"
+              className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
+                isActive("/")
+                  ? "bg-primary text-primary-foreground"
+                  : "text-foreground/80 hover:text-foreground hover:bg-secondary"
+              }`}
+            >
+              <span className="mr-3"><Home size={18} /></span>
+              Home
+            </Link>
             
-            {/* Services section in mobile menu */}
+            {/* Buyer Section in mobile */}
             <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-              <p className="px-4 py-2 text-sm font-semibold text-gray-500">Services</p>
-              {serviceLinks.map((link) => (
+              <p className="px-4 py-2 text-sm font-semibold text-gray-500">Buyer</p>
+              {buyerLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
@@ -162,31 +220,81 @@ const Navbar = () => {
                       : "text-foreground/80 hover:text-foreground hover:bg-secondary"
                   }`}
                 >
-                  <span className="mr-3">{link.icon}</span>
                   {link.name}
                 </Link>
               ))}
             </div>
             
+            {/* Living in section in mobile */}
+            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <p className="px-4 py-2 text-sm font-semibold text-gray-500">Living in</p>
+              {livingInLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
+                    isActive(link.path)
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground/80 hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+            
+            {/* Other menu items */}
+            <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+              <Link
+                to="/book-now"
+                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
+                  isActive("/book-now")
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground/80 hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <span className="mr-3"><Calendar size={18} /></span>
+                Book a Call
+              </Link>
+              
+              <Link
+                to="/seller"
+                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
+                  isActive("/seller")
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground/80 hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <span className="mr-3"><DollarSign size={18} /></span>
+                Seller
+              </Link>
+              
+              <Link
+                to="/marketing-plan"
+                className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 flex items-center ${
+                  isActive("/marketing-plan")
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground/80 hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <span className="mr-3"><Book size={18} /></span>
+                Marketing-Plan
+              </Link>
+            </div>
+            
+            {/* YouTube button for mobile */}
             <div className="pt-2 pb-1 space-y-2">
-              <Link to="/admin" className="w-full block">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-center"
-                  icon={<LayoutDashboard size={18} />}
-                >
-                  Admin Dashboard
-                </Button>
-              </Link>
-              <Link to="/signin" className="w-full block">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-center"
-                  icon={<User size={18} />}
-                >
-                  Sign In
-                </Button>
-              </Link>
+              <a 
+                href="https://www.youtube.com/@waterloorealestate" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                </svg>
+                Watch on YouTube
+              </a>
             </div>
           </div>
         </div>

@@ -40,6 +40,12 @@ const App = () => (
           <Route path="/buyer" element={<Buyer />} />
           <Route path="/seller" element={<Seller />} />
           <Route path="/book-now" element={<BookNow />} />
+          <Route path="/mortgage-calculator" element={<NotFound />} />
+          <Route path="/affordability-calculator" element={<NotFound />} />
+          <Route path="/marketing-plan" element={<NotFound />} />
+          
+          {/* Property City Routes */}
+          <Route path="/property-city/:city" element={<Properties />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminDashboard />}>
