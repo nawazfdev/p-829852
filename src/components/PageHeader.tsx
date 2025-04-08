@@ -11,17 +11,34 @@ interface PageHeaderProps {
   title: string;
   subtitle?: string;
   backgroundImage: string;
-  description?: string;  // Added description prop
+  description?: string;
   quote?: Quote;
+  overlay?: "light" | "medium" | "dark";
+  textColor?: "light" | "dark";
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ 
   title, 
   subtitle, 
   backgroundImage,
-  description,  // Added description in destructuring
-  quote 
+  description,
+  quote,
+  overlay = "medium",
+  textColor = "light"
 }) => {
+  // Determine overlay opacity based on the overlay prop
+  const overlayClasses = {
+    light: "bg-black/30",
+    medium: "bg-black/50",
+    dark: "bg-black/70",
+  };
+
+  // Determine text color based on the textColor prop
+  const textClasses = {
+    light: "text-white",
+    dark: "text-gray-900",
+  };
+
   return (
     <div className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
       {/* Background Image */}
@@ -31,14 +48,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           alt={title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className={`absolute inset-0 ${overlayClasses[overlay]}`}></div>
       </div>
       
       {/* Page Title */}
-      <div className="container relative z-10 text-center text-white">
-        <h1 className="text-5xl md:text-7xl font-bold mb-4">{title}</h1>
-        {subtitle && <p className="text-xl md:text-2xl max-w-3xl mx-auto text-white/80">{subtitle}</p>}
-        {description && <p className="text-xl max-w-3xl mx-auto text-white/90 mt-4">{description}</p>}
+      <div className="container relative z-10 text-center">
+        <h1 className={`text-5xl md:text-7xl font-bold mb-4 ${textClasses[textColor]}`}>{title}</h1>
+        {subtitle && <p className={`text-xl md:text-2xl max-w-3xl mx-auto ${textColor === "light" ? "text-white/80" : "text-gray-700"}`}>{subtitle}</p>}
+        {description && <p className={`text-xl max-w-3xl mx-auto mt-4 ${textColor === "light" ? "text-white/90" : "text-gray-800"}`}>{description}</p>}
       </div>
 
       {/* Quote */}
