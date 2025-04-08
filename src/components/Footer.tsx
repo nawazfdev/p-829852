@@ -4,14 +4,15 @@ import { Link } from "react-router-dom";
 import { 
   Facebook, 
   Instagram, 
-  Twitter, 
-  Linkedin, 
+  Youtube, 
   Mail, 
   Phone, 
   MapPin 
 } from "lucide-react";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container max-w-7xl mx-auto px-4 py-12">
@@ -21,21 +22,38 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4">MoveWaterloo</h3>
             <p className="text-gray-400 mb-4">
-              Your trusted partner in real estate. We help you find the perfect home 
-              or sell your property at the best price.
+              Paul Mann is an accredited real estate broker with nearly two decades of experience, 
+              helping clients with their real estate needs in Kitchener-Waterloo and the surrounding areas. 
+              A recipient of the Lifetime Achievement Award and a member of the Real Estate Hall of Fame, 
+              Paul is known for delivering exceptional service, honest guidance, and proven results.
             </p>
-            <div className="flex space-x-3">
-              <a href="#" aria-label="Facebook" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+            <div className="flex space-x-3 mt-4">
+              <a 
+                href="https://www.facebook.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Facebook" 
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors"
+              >
                 <Facebook size={18} />
               </a>
-              <a href="#" aria-label="Instagram" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
+              <a 
+                href="https://www.instagram.com/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Instagram" 
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors"
+              >
                 <Instagram size={18} />
               </a>
-              <a href="#" aria-label="Twitter" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
-                <Twitter size={18} />
-              </a>
-              <a href="#" aria-label="LinkedIn" className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors">
-                <Linkedin size={18} />
+              <a 
+                href="https://www.youtube.com/@waterloorealestate" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="YouTube" 
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 hover:bg-primary transition-colors"
+              >
+                <Youtube size={18} />
               </a>
             </div>
           </div>
@@ -120,15 +138,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start">
                 <MapPin size={20} className="mr-2 text-primary flex-shrink-0 mt-1" />
-                <span className="text-gray-400">123 Main Street, Waterloo, ON N2L 6R2</span>
+                <span className="text-gray-400">PO Box 37006 Kitchener RPO Stanley Park, ON, N2A 4A7</span>
               </li>
               <li className="flex items-center">
                 <Phone size={20} className="mr-2 text-primary flex-shrink-0" />
-                <span className="text-gray-400">(519) 555-1234</span>
+                <a href="tel:+16472911900" className="text-gray-400 hover:text-white transition-colors">+1 647.291.1900</a>
               </li>
               <li className="flex items-center">
                 <Mail size={20} className="mr-2 text-primary flex-shrink-0" />
-                <span className="text-gray-400">info@movewaterloo.com</span>
+                <a href="mailto:info@movetowaterloo.com" className="text-gray-400 hover:text-white transition-colors">info@movetowaterloo.com</a>
               </li>
             </ul>
           </div>
@@ -136,7 +154,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} MoveWaterloo | Paul Mann Real Estate. All rights reserved.
+            Copyright © {currentYear} MoveWaterloo All Rights Reserved.
           </p>
           <div className="mt-4 md:mt-0">
             <ul className="flex space-x-6 text-sm text-gray-400">
