@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { LayoutGrid, LayoutList, MapIcon } from "lucide-react";
+import { LayoutGrid, LayoutList, MapIcon, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import PropertyGrid from "@/components/PropertyGrid";
 import PropertyFilters from "@/components/PropertyFilters";
@@ -9,7 +10,7 @@ import MapView from "@/components/MapView";
 import Button from "@/components/Button";
 import { PropertyData } from "@/components/PropertyCard";
 import { useToast } from "@/hooks/use-toast";
-import { fetchProperties } from "@/services/repliers-api";
+import { fetchPropertiesFromApify, PropertySearchParams } from "@/services/apify-service";
 
 const Properties = () => {
   const { toast } = useToast();
@@ -21,26 +22,50 @@ const Properties = () => {
   const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({});
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasApiConfig, setHasApiConfig] = useState(false);
-
-  // Check if we have MLS API configuration on component mount
+  
+  // Load properties data from Apify
   useEffect(() => {
-    const mlsConfig = localStorage.getItem("mlsApiSettings");
-    setHasApiConfig(!!mlsConfig);
-  }, []);
-
-  // Load properties data
-  useEffect(() => {
-    // In a real app, this would come from an API
     const loadProperties = async () => {
       setIsLoading(true);
       
       try {
-        const apiProperties = await fetchProperties();
+        // Get search parameters
+        const searchQuery = searchParams.get("search");
+        const cityParam = searchParams.get("city");
         
-        // Fallback to static properties if no API properties
-        if (apiProperties.length === 0) {
-          // Static properties data
+        // Set up search parameters for Apify
+        const searchConfig: PropertySearchParams = {
+          city: cityParam || undefined,
+          maxItems: 50 // Limit to 50 items for better performance
+        };
+        
+        // If there's a search query, add it to the search config
+        if (searchQuery) {
+          // In a real implementation, we'd parse this into specific search parameters
+          // For now, we'll just use it as a city parameter if no city is specified
+          if (!searchConfig.city) {
+            searchConfig.city = searchQuery;
+          }
+        }
+        
+        // Fetch properties from Apify
+        const apifyProperties = await fetchPropertiesFromApify(searchConfig);
+        
+        if (apifyProperties && apifyProperties.length > 0) {
+          // Add featured and new flags to some properties
+          const enhancedProperties = apifyProperties.map((p, i) => ({
+            ...p,
+            isFeatured: i < 3,
+            isNew: i >= 3 && i < 6
+          }));
+          
+          setProperties(enhancedProperties);
+          toast({
+            title: "Properties Loaded",
+            description: `Successfully loaded ${enhancedProperties.length} properties from Realtor.ca.`,
+          });
+        } else {
+          // Fallback to static data if no properties found
           const staticProperties: PropertyData[] = [
             {
               id: 1,
@@ -150,19 +175,11 @@ const Properties = () => {
           ];
           
           setProperties(staticProperties);
-        } else {
-          // Add isFeatured and isNew flags to some properties
-          const enhancedProperties = apiProperties.map((p, i) => ({
-            ...p,
-            isFeatured: i < 3,
-            isNew: i >= 3 && i < 6
-          }));
-          
-          setProperties(enhancedProperties);
           
           toast({
-            title: "Properties Loaded",
-            description: `Successfully loaded ${enhancedProperties.length} properties from MLS API.`,
+            title: "Using Sample Data",
+            description: "No properties found from API. Showing sample properties instead.",
+            variant: "default"
           });
         }
       } catch (error) {
@@ -289,7 +306,7 @@ const Properties = () => {
     };
     
     loadProperties();
-  }, [toast]);
+  }, [toast, searchParams]);
 
   // Filter properties when activeFilters change
   useEffect(() => {
@@ -307,9 +324,14 @@ const Properties = () => {
     
     // Handle property type filter
     if (activeFilters.propertyType && Array.isArray(activeFilters.propertyType) && activeFilters.propertyType.length > 0) {
-      // In a real app, you would filter by actual property types
-      // This is just a placeholder since our data doesn't have this field
-      result = result;
+      result = result.filter(p => 
+        p.features && p.features.some(feature => 
+          activeFilters.propertyType && Array.isArray(activeFilters.propertyType) &&
+          activeFilters.propertyType.some(type => 
+            feature.toLowerCase().includes(type.toLowerCase())
+          )
+        )
+      );
     }
     
     // Handle price range filter
@@ -344,10 +366,8 @@ const Properties = () => {
       result = result.filter(p => p.area >= min && p.area <= max);
     }
     
-    // Handle amenities filter (simplified implementation)
+    // Handle amenities filter
     if (activeFilters.amenities && Array.isArray(activeFilters.amenities) && activeFilters.amenities.length > 0) {
-      // In a real app, we would match against actual amenities
-      // Here we're just checking if any feature contains the amenity name
       result = result.filter(p => 
         activeFilters.amenities && Array.isArray(activeFilters.amenities) && 
         activeFilters.amenities.some(amenity => 
@@ -525,8 +545,9 @@ const Properties = () => {
           {/* Property List or Map */}
           <div className="lg:w-3/4">
             {isLoading ? (
-              <div className="flex justify-center items-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <div className="flex flex-col justify-center items-center min-h-[400px] gap-3">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                <p className="text-muted-foreground">Loading properties from Realtor.ca...</p>
               </div>
             ) : isMapView ? (
               <div className="bg-card rounded-lg shadow-sm animate-fade-in">

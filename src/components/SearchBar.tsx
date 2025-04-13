@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Search, MapPin, Building, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 interface SearchBarProps {
   variant?: "hero" | "compact";
@@ -9,23 +9,29 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ variant = "hero", className = "" }: SearchBarProps) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchTerm.trim()) {
       navigate(`/properties?search=${encodeURIComponent(searchTerm.trim())}`);
+      setIsExpanded(false);
     }
   };
 
+  // Sample suggestions - in a real app, these could come from an API
   const suggestions = [
-    { type: "location", text: "New York, NY" },
-    { type: "location", text: "San Francisco, CA" },
-    { type: "location", text: "Miami, FL" },
-    { type: "type", text: "Modern Apartments" },
-    { type: "type", text: "Luxury Villas" },
+    { type: "location", text: "Ottawa, ON" },
+    { type: "location", text: "Toronto, ON" },
+    { type: "location", text: "Waterloo, ON" },
+    { type: "location", text: "Kitchener, ON" },
+    { type: "location", text: "Vancouver, BC" },
+    { type: "location", text: "Montreal, QC" },
+    { type: "type", text: "Condominiums" },
+    { type: "type", text: "Single Family Homes" },
     { type: "type", text: "Waterfront Properties" },
   ];
 
@@ -62,7 +68,7 @@ const SearchBar = ({ variant = "hero", className = "" }: SearchBarProps) => {
               ? "py-4 pl-12 pr-4 text-lg"
               : "py-2 pl-10 pr-3 text-sm"
           }`}
-          placeholder="Search by address, city, or zip code..."
+          placeholder="Search by address, city, or postal code..."
         />
         {searchTerm && (
           <button
@@ -92,6 +98,7 @@ const SearchBar = ({ variant = "hero", className = "" }: SearchBarProps) => {
                 onClick={() => {
                   setSearchTerm(suggestion.text);
                   setIsExpanded(false);
+                  navigate(`/properties?search=${encodeURIComponent(suggestion.text.trim())}`);
                 }}
               >
                 {suggestion.type === "location" ? (

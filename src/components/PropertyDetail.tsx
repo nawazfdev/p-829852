@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { 
   Bath, Bed, Calendar, Car, Check, ChevronDown, 
-  ChevronUp, Heart, Home, MapPin, Move, Phone, Share2
+  ChevronUp, Heart, Home, MapPin, Move, Phone, Share2,
+  BuildingIcon, RulerIcon, GlobeIcon
 } from "lucide-react";
 import { PropertyData } from "./PropertyCard";
 import ImageGallery from "./ImageGallery";
@@ -44,22 +45,30 @@ const PropertyDetail = ({ property, className = "" }: PropertyDetailProps) => {
     maximumFractionDigits: 0
   }).format(property.price);
   
-  // Mock property details data
-  const propertyDetails = {
-    description: "This stunning property offers luxurious living in a prime location. The spacious interior features high ceilings, premium finishes, and large windows that flood the space with natural light. The open-concept layout is perfect for both entertaining and everyday living. The gourmet kitchen comes equipped with high-end stainless steel appliances, quartz countertops, and a large island. The primary bedroom includes a walk-in closet and an ensuite bathroom with a rainfall shower and soaking tub.\n\nThe property also includes a private backyard, perfect for outdoor dining and relaxation. Located in a highly desirable neighborhood, you'll enjoy proximity to excellent schools, parks, shopping, and restaurants. Don't miss this opportunity to make this exceptional house your home.",
-    yearBuilt: 2020,
-    lotSize: "0.25 acres",
-    parking: "2-car garage",
-    heating: "Central",
-    cooling: "Central Air",
-    images: [
+  // Use the property description if available, otherwise use a default
+  const propertyDescription = property.description || 
+    "This stunning property offers luxurious living in a prime location. The spacious interior features high ceilings, premium finishes, and large windows that flood the space with natural light. The open-concept layout is perfect for both entertaining and everyday living.";
+  
+  // Property images - use the property's image plus some samples
+  const propertyImages = property.additionalImages ? 
+    [property.imageUrl, ...property.additionalImages] : 
+    [
       property.imageUrl,
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=2070&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1560185009-5bf9f2849488?q=80&w=2070&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1558442074-cc152625c46d?q=80&w=2070&auto=format&fit=crop"
-    ],
-    amenities: [
+    ];
+  
+  // Property details - combine actual data with some sample data
+  const propertyDetails = {
+    yearBuilt: property.yearBuilt || 2020,
+    lotSize: property.lotSize || "0.25 acres",
+    parking: property.parking || "2-car garage",
+    heating: property.heating || "Central",
+    cooling: property.cooling || "Central Air",
+    images: propertyImages,
+    amenities: property.features || [
       "Swimming Pool",
       "Fitness Center",
       "Pet Friendly",
@@ -84,6 +93,10 @@ const PropertyDetail = ({ property, className = "" }: PropertyDetailProps) => {
   const handleFavoriteClick = () => {
     setIsFavorite(!isFavorite);
   };
+
+  // Additional information from the property
+  const mlsNumber = property.mlsNumber || "N/A";
+  const agent = property.agent || null;
   
   return (
     <div className={`bg-card rounded-lg shadow-sm overflow-hidden ${className}`}>
@@ -106,6 +119,11 @@ const PropertyDetail = ({ property, className = "" }: PropertyDetailProps) => {
                 </Badge>
               ))}
             </div>
+            {mlsNumber !== "N/A" && (
+              <div className="text-sm text-muted-foreground">
+                MLS#: {mlsNumber}
+              </div>
+            )}
           </div>
           <div className="mt-4 md:mt-0 text-3xl font-semibold text-primary">
             {formattedPrice}
@@ -143,7 +161,7 @@ const PropertyDetail = ({ property, className = "" }: PropertyDetailProps) => {
             <p className={`text-muted-foreground leading-relaxed ${
               !showDescription && "line-clamp-4"
             }`}>
-              {propertyDetails.description}
+              {propertyDescription}
             </p>
             <button 
               className="mt-2 text-primary font-medium inline-flex items-center"
@@ -157,6 +175,83 @@ const PropertyDetail = ({ property, className = "" }: PropertyDetailProps) => {
             </button>
           </div>
         </div>
+        
+        {/* Additional Property Info */}
+        {(property.lotSize || property.propertyType || property.ownershipType) && (
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Property Information</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {property.lotSize && (
+                <div className="flex items-center">
+                  <RulerIcon size={20} className="mr-3 text-primary" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">Lot Size</div>
+                    <div>{property.lotSize}</div>
+                  </div>
+                </div>
+              )}
+              {property.propertyType && (
+                <div className="flex items-center">
+                  <BuildingIcon size={20} className="mr-3 text-primary" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">Property Type</div>
+                    <div>{property.propertyType}</div>
+                  </div>
+                </div>
+              )}
+              {property.ownershipType && (
+                <div className="flex items-center">
+                  <GlobeIcon size={20} className="mr-3 text-primary" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">Ownership</div>
+                    <div>{property.ownershipType}</div>
+                  </div>
+                </div>
+              )}
+              {mlsNumber !== "N/A" && (
+                <div className="flex items-center">
+                  <GlobeIcon size={20} className="mr-3 text-primary" />
+                  <div>
+                    <div className="text-sm text-muted-foreground">MLS Number</div>
+                    <div>{mlsNumber}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        
+        {/* Agent Information */}
+        {agent && (
+          <div className="mb-8 p-4 bg-secondary/30 rounded-lg">
+            <h2 className="text-xl font-semibold mb-4">Listing Agent</h2>
+            <div className="flex items-center gap-4">
+              {agent.photo && (
+                <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
+                  <img 
+                    src={agent.photo} 
+                    alt={agent.name || "Agent"} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div>
+                <h3 className="font-medium">{agent.name}</h3>
+                {agent.position && <p className="text-sm">{agent.position}</p>}
+                {agent.organization && <p className="text-sm text-muted-foreground">{agent.organization}</p>}
+                {agent.phone && (
+                  <a 
+                    href={`tel:${agent.phone}`}
+                    className="text-sm text-primary flex items-center mt-1"
+                  >
+                    <Phone size={14} className="mr-1" />
+                    {agent.phone}
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Amenities */}
         <div className="mb-8">

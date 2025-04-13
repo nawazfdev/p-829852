@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Heart, Bath, Bed, MapPin, Move, Star } from "lucide-react";
+import { Heart, Bath, Bed, MapPin, Move, Star, Tag } from "lucide-react";
 import Badge from "./Badge";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,23 @@ export interface PropertyData {
   isNew?: boolean;
   mlsNumber?: string;
   description?: string;
+  propertyType?: string;
+  ownershipType?: string;
+  lotSize?: string;
+  yearBuilt?: number;
+  parking?: string;
+  heating?: string;
+  cooling?: string;
+  additionalImages?: string[];
+  longitude?: number;
+  latitude?: number;
+  agent?: {
+    name: string;
+    photo?: string;
+    position?: string;
+    organization?: string;
+    phone?: string;
+  }
 }
 
 interface PropertyCardProps {
@@ -45,7 +62,8 @@ const PropertyCard = ({
     features,
     imageUrl,
     isFeatured,
-    isNew
+    isNew,
+    mlsNumber
   } = property;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -145,6 +163,13 @@ const PropertyCard = ({
                 </Badge>
               )}
             </div>
+            
+            {mlsNumber && (
+              <div className="mt-2 flex items-center text-xs text-muted-foreground">
+                <Tag size={12} className="mr-1" />
+                <span>MLS# {mlsNumber}</span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -220,6 +245,13 @@ const PropertyCard = ({
             <span>{area} sqft</span>
           </div>
         </div>
+        
+        {mlsNumber && (
+          <div className="mt-2 flex items-center text-xs text-muted-foreground">
+            <Tag size={12} className="mr-1" />
+            <span>MLS# {mlsNumber}</span>
+          </div>
+        )}
       </div>
     </Link>
   );
