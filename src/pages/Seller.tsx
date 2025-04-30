@@ -1,18 +1,54 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, TrendingUp, Badge, Home, Star } from "lucide-react";
 
 const Seller = () => {
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const subtitleRef = useRef<HTMLSpanElement>(null);
+  const cityRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  useEffect(() => {
+    // Animate city names with sequential delays
+    const cities = cityRefs.current;
+    cities.forEach((city, index) => {
+      if (city) {
+        city.style.animationDelay = `${index * 0.2}s`;
+      }
+    });
+  }, []);
+
+  const cities = ["Waterloo", "Kitchener", "Cambridge", "Guelph", "Stratford"];
+
   return (
     <div className="min-h-screen">
       <Navbar />
       
       <PageHeader
-        title="Sell Your Home"
-        subtitle="Using Proven Marketing Strategies"
+        title={
+          <div className="animated-text">
+            <span className="animated-text-item" ref={titleRef}>Sell Your Home</span>
+          </div>
+        }
+        subtitle={
+          <div>
+            <div className="animated-text-item mb-4" ref={subtitleRef}>Using Proven Marketing Strategies in</div>
+            <div className="city-animation mt-2 space-x-3">
+              {cities.map((city, index) => (
+                <span 
+                  key={index}
+                  ref={el => cityRefs.current[index] = el}
+                  className="city-animation-item text-yellow-400 font-semibold"
+                  style={{animationDelay: `${index * 0.2}s`}}
+                >
+                  {index > 0 && <span className="text-white mx-1">•</span>}
+                  {city}
+                </span>
+              ))}
+            </div>
+          </div>
+        }
         backgroundImage="https://images.unsplash.com/photo-1560518883-f5c2c9260e9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80"
         quote={{
           text: "If you don't like where you are, move. You are not a tree.",

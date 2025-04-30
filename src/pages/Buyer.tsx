@@ -1,18 +1,52 @@
-
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 
 const Buyer = () => {
+  const cityRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  useEffect(() => {
+    // Animate city names with sequential delays
+    const cities = cityRefs.current;
+    cities.forEach((city, index) => {
+      if (city) {
+        city.style.animationDelay = `${index * 0.2}s`;
+      }
+    });
+  }, []);
+
+  const cities = ["Waterloo", "Kitchener", "Cambridge", "Guelph", "Stratford"];
+
   return (
     <div className="min-h-screen">
       <Navbar />
       
       <PageHeader
-        title="Buyer Guide"
-        subtitle="Everything you need to know before buying your home in Waterloo"
+        title={
+          <div className="animated-text">
+            <span className="animated-text-item">Buyer Guide</span>
+          </div>
+        }
+        subtitle={
+          <div>
+            <div className="animated-text-item mb-4">Everything you need to know before buying your home in</div>
+            <div className="city-animation mt-2 space-x-3">
+              {cities.map((city, index) => (
+                <span 
+                  key={index}
+                  ref={el => cityRefs.current[index] = el}
+                  className="city-animation-item text-yellow-400 font-semibold"
+                  style={{animationDelay: `${index * 0.2}s`}}
+                >
+                  {index > 0 && <span className="text-white mx-1">•</span>}
+                  {city}
+                </span>
+              ))}
+            </div>
+          </div>
+        }
         backgroundImage="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2073&auto=format&fit=crop"
         quote={{
           text: "If you don't like where you are, move. You are not a tree.",

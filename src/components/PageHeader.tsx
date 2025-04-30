@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface Quote {
   text: string;
@@ -8,8 +8,8 @@ interface Quote {
 }
 
 interface PageHeaderProps {
-  title: string;
-  subtitle?: string;
+  title: ReactNode;
+  subtitle?: ReactNode;
   backgroundImage: string;
   description?: string;
   quote?: Quote;
@@ -45,7 +45,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       <div className="absolute inset-0 z-0">
         <img
           src={backgroundImage}
-          alt={title}
+          alt={typeof title === 'string' ? title : 'Page header'}
           className="w-full h-full object-cover"
         />
         <div className={`absolute inset-0 ${overlayClasses[overlay]}`}></div>
@@ -53,8 +53,20 @@ const PageHeader: React.FC<PageHeaderProps> = ({
       
       {/* Page Title */}
       <div className="container relative z-10 text-center">
-        <h1 className={`text-5xl md:text-7xl font-bold mb-4 ${textClasses[textColor]}`}>{title}</h1>
-        {subtitle && <p className={`text-xl md:text-2xl max-w-3xl mx-auto ${textColor === "light" ? "text-white/80" : "text-gray-700"}`}>{subtitle}</p>}
+        {typeof title === 'string' ? (
+          <h1 className={`text-5xl md:text-7xl font-bold mb-4 ${textClasses[textColor]}`}>{title}</h1>
+        ) : (
+          <h1 className={`text-5xl md:text-7xl font-bold mb-4 ${textClasses[textColor]}`}>{title}</h1>
+        )}
+        
+        {subtitle && (
+          typeof subtitle === 'string' ? (
+            <p className={`text-xl md:text-2xl max-w-3xl mx-auto ${textColor === "light" ? "text-white/80" : "text-gray-700"}`}>{subtitle}</p>
+          ) : (
+            <div className={`text-xl md:text-2xl max-w-3xl mx-auto ${textColor === "light" ? "text-white/80" : "text-gray-700"}`}>{subtitle}</div>
+          )
+        )}
+        
         {description && <p className={`text-xl max-w-3xl mx-auto mt-4 ${textColor === "light" ? "text-white/90" : "text-gray-800"}`}>{description}</p>}
       </div>
 
