@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
@@ -5,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, TrendingUp, Badge, Home, Star } from "lucide-react";
 
 const Seller = () => {
-  const titleRef = useRef<HTMLSpanElement>(null);
-  const subtitleRef = useRef<HTMLSpanElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
   const cityRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const Seller = () => {
       <PageHeader
         title={
           <div className="animated-text">
-            <span className="animated-text-item" ref={titleRef}>Sell Your Home</span>
+            <div className="animated-text-item" ref={titleRef}>Sell Your Home</div>
           </div>
         }
         subtitle={
@@ -268,3 +269,4 @@ const Seller = () => {
 };
 
 export default Seller;
+

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import PageHeader from "@/components/PageHeader";
@@ -5,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 
 const Buyer = () => {
+  const titleRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLDivElement>(null);
   const cityRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
@@ -26,12 +29,12 @@ const Buyer = () => {
       <PageHeader
         title={
           <div className="animated-text">
-            <span className="animated-text-item">Buyer Guide</span>
+            <div className="animated-text-item" ref={titleRef}>Buyer Guide</div>
           </div>
         }
         subtitle={
           <div>
-            <div className="animated-text-item mb-4">Everything you need to know before buying your home in</div>
+            <div className="animated-text-item mb-4" ref={subtitleRef}>Everything you need to know before buying your home in</div>
             <div className="city-animation mt-2 space-x-3">
               {cities.map((city, index) => (
                 <span 
@@ -214,3 +217,4 @@ const Buyer = () => {
 };
 
 export default Buyer;
+
